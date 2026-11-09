@@ -70,7 +70,7 @@
   .back{position:fixed;left:14px;top:14px;height:40px;padding:0 16px;border-radius:999px;border:1.5px solid rgba(200,245,38,.35);
     background:rgba(30,30,28,.6);color:var(--acid);font:600 15px Quicksand,system-ui,sans-serif;cursor:pointer}
   .back:hover{border-color:var(--acid)}
-  .view{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;opacity:0;pointer-events:none;
+  .view{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;opacity:0;pointer-events:none;
     transform:scale(1.03);transition:opacity .5s ease, transform .5s ease;padding:76px 16px 130px;
     display:flex;flex-direction:column;align-items:center}
   .view.open{opacity:1;pointer-events:auto;transform:none}
@@ -132,8 +132,11 @@
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
   @media (max-width:520px){ #bar{justify-content:flex-start;padding-left:14px;gap:8px} .slot{width:46px;height:46px} .slot img{width:52px;height:52px} .slot svg{width:40px;height:40px} .slot.chars svg{width:32px;height:32px} .slot.colors.multi img{width:34px;height:34px} #next svg{width:64px} #next.big svg{width:96px} }
   /* результат */
-  #result .head{height:clamp(56px,9vh,84px)}
-  #preview{width:min(86vw,58vh,460px);aspect-ratio:1;display:block}
+  #result{padding-top:clamp(48px,6vh,64px);padding-bottom:120px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
+  #result .head{height:clamp(44px,6vh,64px);margin-bottom:6px}
+  #preview{width:min(82vw,44vh,380px);aspect-ratio:1;display:block}
+  #result .order-btn{margin:18px auto 40px;position:relative;z-index:2}
+  #result::after{content:'';display:block;width:100%;min-height:80px;flex-shrink:0}
   .sum{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 14px;margin-top:6px;color:var(--acid)}
   .sum img{width:54px;height:54px}
   .sum .num{font:600 14px Quicksand,sans-serif;color:var(--acid);margin-left:-6px}
@@ -1128,7 +1131,7 @@
     const on = VIEWS.includes(v) ? v : null;
     VIEWS.forEach(k => { const el = document.getElementById(k); el.classList.toggle('open', k === on); el.setAttribute('aria-hidden', k === on ? 'false' : 'true'); });
     finalEl.classList.toggle('away', !!on);
-    bar.classList.toggle('show', !!on);
+    bar.classList.toggle('show', !!on && on !== 'result');
     replay.style.visibility = on ? 'hidden' : '';
     if (!on) document.querySelectorAll('.star').forEach(s => s.classList.remove('burst'));
     if (on && on !== 'menu') document.getElementById(on).scrollTop = 0;
