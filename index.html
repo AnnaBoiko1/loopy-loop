@@ -157,6 +157,11 @@
 
   .bar-total{font:700 14px 'Baloo 2',Quicksand,sans-serif;color:var(--acid);background:rgba(200,245,38,.12);border:1px solid rgba(200,245,38,.35);border-radius:999px;padding:4px 11px;margin-left:6px;pointer-events:auto;white-space:nowrap;display:inline-flex;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.3)}
 
+  .mail-alert-box{background:rgba(200,245,38,.12);border:1.5px solid var(--acid);border-radius:14px;padding:12px 14px;margin:12px 0 16px;text-align:center}
+  .mail-send-main-btn{background:var(--acid);color:#1e1f1c;border:none;border-radius:999px;font:700 14px 'Baloo 2',Quicksand,sans-serif;padding:10px 18px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;box-shadow:0 4px 16px rgba(200,245,38,.3);transition:all .2s;width:100%;box-sizing:border-box}
+  .mail-send-main-btn:hover{background:#d5ff3d;transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,245,38,.45)}
+  .mail-send-main-btn:active{transform:translateY(0)}
+
   /* Result screen price & summary */
   .result-price-wrap{opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease;text-align:center;margin:8px auto 4px;pointer-events:none}
   .result-price-wrap.shown{opacity:1;transform:translateY(0);pointer-events:auto}
@@ -332,7 +337,21 @@
         <div class="p-prepay" id="modalOrderPrepay">10% Prepayment: ≈ 2.80 €</div>
       </div>
     </div>
-    <form id="orderForm">
+    <iframe name="orderSubmitIframe" id="orderSubmitIframe" style="display:none;width:0;height:0;border:0;"></iframe>
+    <form id="orderForm" action="https://formsubmit.co/annaboiko1@icloud.com" method="POST" target="orderSubmitIframe">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_subject" id="formSubject" value="New Loopy Loop Order">
+      <input type="hidden" name="_cc" id="formCc" value="">
+      <input type="hidden" name="_replyto" id="formReplyTo" value="">
+      <input type="hidden" name="Order ID" id="formOrderId" value="">
+      <input type="hidden" name="Item / Form" id="formItem" value="">
+      <input type="hidden" name="Yarn Colors" id="formColors" value="">
+      <input type="hidden" name="Character / Details" id="formChars" value="">
+      <input type="hidden" name="Estimated Total" id="formTotal" value="">
+      <input type="hidden" name="10% Prepayment Required" id="formPrepay" value="">
+      <input type="hidden" name="PayPal Account" value="annaboiko1@icloud.com">
+      <input type="hidden" name="Prepayment Info" value="Send 10% prepayment to PayPal: annaboiko1@icloud.com. The maker begins crafting once prepayment is received.">
       <div class="form-group">
         <label for="custName">Your full name <span class="req">*</span></label>
         <input class="form-control" id="custName" name="name" required placeholder="e.g. Jane Doe" autocomplete="name">
@@ -360,12 +379,23 @@
     <div class="success-icon">✓</div>
     <h2 class="modal-title">Order Received! 🎉</h2>
     <div class="success-num" id="orderIdBadge">#LP-123456</div>
-    <p class="modal-subtitle" style="margin-bottom:8px">Order specifications have been sent to the maker. Complete the 10% prepayment via PayPal below:</p>
+
+    <div class="mail-alert-box" style="margin:8px 0 14px">
+      <div style="font-weight:700;color:var(--acid);font-size:13.5px;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:6px">
+        <span>📧</span> Emails Sent Successfully
+      </div>
+      <div style="font-size:11.5px;color:var(--cream);opacity:.85;line-height:1.45">
+        Specifications sent to <b>annaboiko1@icloud.com</b>.<br>
+        A confirmation with prepayment details has been sent to <b id="custEmailDisplay">your email</b>.
+      </div>
+    </div>
+
     <div class="prepay-highlight">
       <div class="lbl">Required 10% Prepayment:</div>
       <div class="amount" id="successPrepay">≈ 2.80 €</div>
       <div class="lbl" id="successTotalNote">Estimated total: ≈ 28 € (balance upon completion)</div>
     </div>
+
     <div class="requisites-card" id="requisitesCard">
       <div class="row"><span class="rk">Payment Method:</span><span class="rv">PayPal</span></div>
       <div class="row"><span class="rk">PayPal Address:</span><span class="rv" id="reqPaypal">annaboiko1@icloud.com</span></div>
@@ -381,13 +411,18 @@
         </a>
       </div>
     </div>
+
     <div style="font-size:11.5px;color:rgba(245,210,170,.7);margin:10px 0 12px;line-height:1.4">
-      Once you transfer the prepayment via PayPal, click below to confirm:
+      Once you transfer the 10% prepayment via PayPal, click below:
     </div>
     <div class="actions-row">
       <button type="button" class="mail-client-btn" id="confirmPaymentBtn">Confirm Payment Sent</button>
       <button type="button" class="done-btn" id="modalCancelBtn">Cancel</button>
     </div>
+    <a class="req-copy-btn" id="openMailAppBtn" href="#" target="_blank" rel="noopener" style="margin-top:10px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;border-color:rgba(200,245,38,.25);font-size:11.5px;opacity:.8">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Open Email Client (Backup copy)
+    </a>
     <div id="paymentStatusNotice" style="display:none;font-size:12px;color:var(--acid);margin-top:10px;text-align:center">
       ✓ Prepayment confirmed! The maker will verify your payment and start crafting your piece.
     </div>
@@ -1215,7 +1250,6 @@
   const orderFormEl = document.getElementById('orderForm');
   if (orderFormEl) {
     orderFormEl.addEventListener('submit', e => {
-      e.preventDefault();
       const fd = new FormData(orderFormEl);
       const total = calcTotal(pick);
       const prepay = (total * (ORDER_CONFIG.prepayPercent / 100)).toFixed(2);
@@ -1238,9 +1272,31 @@
 
       currentOrderData = { orderId, orderDate, formTitle, selYarns, chars, total, prepay, name, email, address, phone, comment };
 
+      // Populate hidden inputs for FormSubmit (sends to maker AND CC to customer)
+      const subEl = document.getElementById('formSubject');
+      if (subEl) subEl.value = `New Custom Order #${orderId}: ${formTitle}`;
+      const ccEl = document.getElementById('formCc');
+      if (ccEl) ccEl.value = email; // Carbon copy sent to customer!
+      const replyEl = document.getElementById('formReplyTo');
+      if (replyEl) replyEl.value = email;
+      const oidEl = document.getElementById('formOrderId');
+      if (oidEl) oidEl.value = orderId;
+      const itEl = document.getElementById('formItem');
+      if (itEl) itEl.value = formTitle;
+      const colEl = document.getElementById('formColors');
+      if (colEl) colEl.value = selYarns.join(', ') || 'None selected';
+      const chEl = document.getElementById('formChars');
+      if (chEl) chEl.value = chars.join(', ') || 'None';
+      const totEl = document.getElementById('formTotal');
+      if (totEl) totEl.value = `≈ ${total} €`;
+      const prepEl = document.getElementById('formPrepay');
+      if (prepEl) prepEl.value = `≈ ${prepay} € (10% Prepayment)`;
+
       // Update success confirmation in modal
       const idBadge = document.getElementById('orderIdBadge');
       if (idBadge) idBadge.textContent = '#' + orderId;
+      const custDisplay = document.getElementById('custEmailDisplay');
+      if (custDisplay) custDisplay.textContent = email;
       const sPrepay = document.getElementById('successPrepay');
       if (sPrepay) sPrepay.textContent = `≈ ${prepay} €`;
       const sNote = document.getElementById('successTotalNote');
@@ -1252,40 +1308,31 @@
       const reqPrepayVal = document.getElementById('reqPrepayVal');
       if (reqPrepayVal) reqPrepayVal.textContent = `≈ ${prepay} €`;
 
-      // 1) IMMEDIATELY SEND ORDER EMAIL TO MAKER
-      const emailPayload = {
-        _subject: `New Custom Order ${orderId}: ${formTitle}`,
-        _template: 'table',
-        _captcha: 'false',
-        'Order ID': orderId,
-        'Date': orderDate,
-        'Form': formTitle,
-        'Colors': selYarns.join(', ') || 'None selected',
-        'Character / Details': chars.length ? chars.join(', ') : 'None',
-        'Estimated Total': `≈ ${total} €`,
-        '10% Prepayment Amount': `≈ ${prepay} €`,
-        'Customer Name': name,
-        'Customer Email': email,
-        'Customer Phone': phone || 'Not provided',
-        'Delivery Address': address,
-        'Customer Notes': comment || 'None',
-        'PayPal Account': ORDER_CONFIG.paypal
-      };
-
-      try {
-        fetch(`https://formsubmit.co/ajax/${encodeURIComponent(ORDER_CONFIG.friendEmail)}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(emailPayload)
-        }).catch(err => {
-          console.warn('Auto-email notification attempt:', err);
-        });
-      } catch (err) {
-        console.warn('Auto-email fetch error:', err);
-      }
+      // Direct mailto link backup
+      const mailSubject = encodeURIComponent(`New Custom Order ${orderId}: ${formTitle}`);
+      const mailBody = encodeURIComponent(
+        `NEW CUSTOM ORDER - LOOPY LOOP\n` +
+        `Order ID: ${orderId}\n` +
+        `Date: ${orderDate}\n\n` +
+        `ITEM SPECIFICATIONS:\n` +
+        `- Form: ${formTitle}\n` +
+        `- Yarn Colors: ${selYarns.join(', ') || 'None'}\n` +
+        `- Character / Details: ${chars.join(', ') || 'None'}\n` +
+        `- Estimated Total: ≈ ${total} €\n` +
+        `- Required 10% Prepayment: ≈ ${prepay} €\n\n` +
+        `CUSTOMER DETAILS:\n` +
+        `- Name: ${name}\n` +
+        `- Email: ${email}\n` +
+        `- Phone: ${phone || 'Not provided'}\n` +
+        `- Delivery Address: ${address}\n` +
+        `- Comments: ${comment || 'None'}\n\n` +
+        `PAYMENT REQUISITES:\n` +
+        `PayPal: ${ORDER_CONFIG.paypal}\n` +
+        `Reference: Order ${orderId}\n`
+      );
+      const mailtoUrl = `mailto:${ORDER_CONFIG.friendEmail}?cc=${encodeURIComponent(email)}&subject=${mailSubject}&body=${mailBody}`;
+      const openMailBtn = document.getElementById('openMailAppBtn');
+      if (openMailBtn) openMailBtn.href = mailtoUrl;
 
       // 2) Copy PayPal address button
       const copyBtn = document.getElementById('copyPaypalBtn');
@@ -1310,6 +1357,22 @@
           confirmPayBtn.disabled = true;
           confirmPayBtn.textContent = '✓ Prepayment Confirmed!';
           if (payNotice) payNotice.style.display = 'block';
+          // Notify payment confirmation via FormSubmit background post
+          try {
+            const payFormData = new FormData();
+            payFormData.append('_captcha', 'false');
+            payFormData.append('_template', 'table');
+            payFormData.append('_subject', `[PAYMENT CONFIRMED] Order #${orderId} (≈ ${prepay} €)`);
+            payFormData.append('_cc', email);
+            payFormData.append('Status', 'Customer clicked Confirm Payment Sent via PayPal');
+            payFormData.append('Order ID', orderId);
+            payFormData.append('Prepayment Amount', `≈ ${prepay} €`);
+            payFormData.append('Customer', `${name} (${email})`);
+            fetch(`https://formsubmit.co/ajax/${encodeURIComponent(ORDER_CONFIG.friendEmail)}`, {
+              method: 'POST',
+              body: payFormData
+            }).catch(() => {});
+          } catch (_) {}
 
           // Send payment confirmation email notification to maker
           try {
